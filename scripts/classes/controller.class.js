@@ -1,5 +1,5 @@
 class Controller{
-    constructor(player){
+    constructor(player, world){
         this.keys = {};
         document.addEventListener("keydown",(event) => {
             if(event.key === "d" || event.key === "ArrowRight"){
@@ -13,6 +13,12 @@ class Controller{
             if(event.key === " "){
                 player.isJumping = true;
             }
+            if(event.key === "f"){
+                if(event.repeat) return;
+                player.gameFrame = 0;
+                player.isAttacking = true;
+                console.log("attacking");   
+            }
         });
         document.addEventListener("keyup",(event) => {
             if(event.key === "d" || event.key === "ArrowRight"){
@@ -20,6 +26,10 @@ class Controller{
             }
             if(event.key === "a" || event.key === "ArrowLeft"){
                 player.isMoving = false;
+            }
+            if(event.key === "f"){
+                player.isAttacking = false;
+                player.cooldown = false;
             }
         });
     }
