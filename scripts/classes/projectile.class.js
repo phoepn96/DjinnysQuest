@@ -1,25 +1,32 @@
 class Projectile{
-    constructor(player){
+    constructor(charObj, imgSrc, spriteWidth, spriteHeight){
         this.width = 64;
         this.height = 64;
-        this.y = (player.y + (this.height/2)) + 10;
+        this.y = (charObj.y + (this.height/2)) + 10;
+        this.direction = "right"
         this.img = new Image();
-        this.img.src = "../assets/img/player/projectile/projSheet.png";
-        this.spriteWidth = 256;
-        this.spriteHeight = 256;
-        
+        this.img.src = imgSrc;
+        this.spriteWidth = spriteWidth;
+        this.spriteHeight = spriteHeight;
+        this.x = charObj.x + this.width;
         this.gameFrame = 0;
         this.delayFrames = 5;
         this.spriteColumn = 0;
         this.projectileSpeed = 3;
-         
-        if(player.direction === "right"){
+
+        if(charObj.direction === "right"){
             this.direction = "right";
-            this.x = player.x + this.width;
+            this.x = charObj.x + this.width;
         }else{
             this.direction = "left";
-            this.x = player.x;
+            this.x = charObj.x;
         }
+        this.hitbox_x_right = 25;
+        this.hitbox_x_left = 25;
+        this.hitboxY = 28;
+        this.hitboxWidth = 50;
+        this.hitboxHeight = 50;
+        this.hitbox = new Hitbox(this);
     }
 
 
@@ -29,10 +36,12 @@ class Projectile{
         }else{
             this.startProjectile(-this.projectileSpeed)
         }
+       
     }
 
     draw(){
         ctx.drawImage(this.img, this.spriteColumn, 0, this.spriteWidth, this.spriteHeight,this.x, this.y, this.width, this.height);
+        this.hitbox.draw();
     }
 
     startProjectile(projectileSpeed){
@@ -40,5 +49,6 @@ class Projectile{
         this.x += projectileSpeed;
         this.spriteColumn = this.spritePosition*this.spriteWidth;
         this.gameFrame ++;
+        this.hitbox.update(this);
     }
-} 
+}

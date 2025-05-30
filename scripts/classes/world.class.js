@@ -5,8 +5,9 @@ class World{
         this.height = canvas.height;
         this.x = 0;
         this.y = 0;
-        this.player = new Player(this);
+        this.player = new Player(this, 500, 600);
         this.gravity = 0.5;
+        this.enemie = new SmallDragon(this, 200, 600)
     }
 
     update(){
@@ -19,7 +20,7 @@ class World{
             this.gravity = 0.5;
             this.player.isJumping = false;
         }
-        
+        this.enemie.update();
         this.updateProjectiles();
     }
 
@@ -28,6 +29,7 @@ class World{
         this.player.projectiles.forEach(proj => {
             proj.draw();
         })
+        this.enemie.draw();
     }
 
     updateProjectiles(){

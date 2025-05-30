@@ -1,11 +1,9 @@
-class Player{
-    constructor(world){
-        this.width = 128;
-        this.height = 128;
-        this.x = 500;
-        this.y = 600;
-        this.world = world
-
+class Player extends Character{
+    constructor(world, x, y){
+        super(world, x, y);
+        this.width = 90;
+        this.height = 120;
+        this.hp = 5;
         this.controller = new Controller(this);
         this.direction = "right";
         this.isMoving = false;
@@ -31,7 +29,17 @@ class Player{
         this.spritePosition;
         this.shotReady = false;
         this.cooldown = false;
-        
+
+
+        this.hitboxY= 22;
+        this.hitboxWidth = 35;
+        this.hitboxHeight = 22;
+        this.hitbox_x_right = 20;
+        this.hitbox_x_left = (this.width/2) +10;
+        this.hitbox = new Hitbox(this);
+
+
+
     }
 
     update(){
@@ -44,10 +52,12 @@ class Player{
             this.img = this.imgLeft;
             this.checkAnimation(-this.speed, this.velocity)
         }
+        this.hitbox.update(this);
     }
 
     draw(){
-        ctx.drawImage(this.img, this.spriteColumn, this.spriteRow * this.spriteWidth, this.spriteWidth, this.spriteHeight, this.x, this.y, this.width, this.height);
+        ctx.drawImage(this.img, this.spriteColumn, this.spriteRow * this.spriteWidth, this.spriteWidth, this.spriteHeight, this.x, this.y, this.spriteWidth, this.spriteHeight);
+        this.hitbox.draw(this);
     }
 
     calculateGameFrame(){
@@ -86,7 +96,7 @@ class Player{
             this.calculateGameFrame();
             if(this.spritePosition === 3){
                 if(!this.cooldown){
-                    this.projectiles.push(new Projectile(this))
+                    this.projectiles.push(new Projectile(this, "../assets/img/player/projectile/projSheet.png", 256, 256))
                     this.cooldown = true;
                     this.isAttacking = false;
                 }

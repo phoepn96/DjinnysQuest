@@ -12,36 +12,6 @@ function animate(){
     requestAnimationFrame(animate);
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 function stopAnimation(){
     stopAni = true;
 }
