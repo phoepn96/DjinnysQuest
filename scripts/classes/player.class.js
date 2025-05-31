@@ -12,6 +12,7 @@ class Player extends Character{
         this.velocity = 15;
         this.weight = 2;
         this.isAttacking = false;
+        this.isHurt = false;
         this.projectiles = [];
 
         this.imgRight = new Image();
@@ -53,6 +54,9 @@ class Player extends Character{
             this.checkAnimation(-this.speed, this.velocity)
         }
         this.hitbox.update(this);
+        if(this.hp <= 0){
+            this.isDead = true;
+        }
     }
 
     draw(){
@@ -66,41 +70,73 @@ class Player extends Character{
             this.spriteColumn = this.spritePosition * this.spriteWidth;
             this.gameFrame ++;
         }
+        if(this.spriteRow === 2){
+            this.spritePosition = (Math.floor(this.gameFrame/this.delayFrames) % 2) + 2;
+            this.spriteColumn = this.spritePosition * this.spriteWidth;
+            
+            if(this.spritePosition === 3){
+                this.isHurt = false;
+            }
+            this.gameFrame ++;
+        }
+        if(this.spriteRow === 1){
+             this.spritePosition = (Math.floor(this.gameFrame/this.delayFrames) % 5);
+             this.spriteColumn = this.spritePosition * this.spriteWidth;
+            if(this.spritePosition === 4){
+                console.log("YOU DIED");
+                stopAni = true;
+            }
+             this.gameFrame++
+        }
+
+        
         
     }
 
     checkAnimation(speed, velocity){
-        if(this.isMoving && !this.isAttacking){
+        if(this.isMoving && !this.isAttacking && !this.isHurt && !this.isDead){
                 this.spriteRow = 4;
                 this.delayFrames = 5;
                 this.calculateGameFrame();
                 this.x += speed;
         }
 
-        if(this.isJumping){
+        if(this.isJumping && !this.isHurt && !this.isDead){
                 this.y -= velocity;
                 this.spriteRow = 4;
                 this.delayFrames = 5;
                 this.calculateGameFrame();
         }
 
-        if(!this.isMoving && !this.isJumping && !this.isAttacking){
+        if(!this.isMoving && !this.isJumping && !this.isAttacking && !this.isHurt && !this.isDead){
             this.spriteRow = 3;
             this.delayFrames = 18;
             this.calculateGameFrame();
         }
 
-        if(this.isAttacking){
+        if(this.isAttacking && !this.isHurt && !this.isDead){
             this.spriteRow = 0;
             this.delayFrames = 4;
             this.calculateGameFrame();
             if(this.spritePosition === 3){
                 if(!this.cooldown){
-                    this.projectiles.push(new Projectile(this, "../assets/img/player/projectile/projSheet.png", 256, 256))
+                    this.projectiles.push(new Projectile(this, "../assets/img/player/projectile/projSheet.png", 256, 256, 6))
                     this.cooldown = true;
                     this.isAttacking = false;
                 }
             }
+        }
+
+        if(this.isHurt && !this.isDead){
+            this.spriteRow = 2;
+            this.delayFrames = 20;
+            this.calculateGameFrame();
+        }
+
+        if(this.isDead){
+            this.spriteRow = 1;
+            this.delayFrames = 40;
+            this.calculateGameFrame();
         }
     }
 }

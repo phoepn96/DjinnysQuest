@@ -7,7 +7,7 @@ class World{
         this.y = 0;
         this.player = new Player(this, 500, 600);
         this.gravity = 0.5;
-        this.enemie = new SmallDragon(this, 200, 600)
+        this.enemies = [new SmallDragon(this, 200, 600), new SmallDragon(this, 700, 600)]
     }
 
     update(){
@@ -20,8 +20,12 @@ class World{
             this.gravity = 0.5;
             this.player.isJumping = false;
         }
-        this.enemie.update();
-        this.updateProjectiles();
+        
+        this.enemies.forEach(enemy => {
+            enemy.update();
+            this.updateProjectiles(enemy)
+        });
+        this.updateProjectiles(this.player);
     }
 
     draw(){
@@ -29,15 +33,20 @@ class World{
         this.player.projectiles.forEach(proj => {
             proj.draw();
         })
-        this.enemie.draw();
+        this.enemies.forEach(enemy => {
+            enemy.draw();
+            enemy.projectiles.forEach(proj => {
+                proj.draw();
+            });
+        });
     }
 
-    updateProjectiles(){
-        for(let i = this.player.projectiles.length -1 ; i >= 0; i--){
-            const proj = this.player.projectiles[i];
+    updateProjectiles(charObj){
+        for(let i = charObj.projectiles.length -1 ; i >= 0; i--){
+            const proj = charObj.projectiles[i];
             proj.update();
             if(proj.x + proj.width < this.x || proj.x > this.x + this.width){
-                this.player.projectiles.splice(i, 1)
+                charObj.projectiles.splice(i, 1)
             }
         }
     }
