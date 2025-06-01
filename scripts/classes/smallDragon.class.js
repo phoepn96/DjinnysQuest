@@ -117,7 +117,7 @@ class SmallDragon extends Enemie{
 }
 
     moveUp(){
-        if(this.isAttacking || this.isDead) return
+        if(this.isAttacking || this.isDead || this.isHurt) return
         if(this.x + this.width < this.world.player.x){
             this.isMoving = true;
             this.direction = "right";
@@ -132,7 +132,7 @@ class SmallDragon extends Enemie{
    }
 
    attack(){
-    if(!this.cooldown && !this.isDead)
+    if(!this.cooldown && !this.isDead && !this.isHurt)
         if(this.x >= this.world.x && this.x + this.width <= this.world.x + this.world.width){
             this.isAttacking = true;
             this.cooldown = true;

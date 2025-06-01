@@ -98,7 +98,24 @@ class Player extends Character{
                 this.spriteRow = 4;
                 this.delayFrames = 5;
                 this.calculateGameFrame();
-                this.x += speed;
+                if(this.x + this.width >= 650){
+                    if(this.direction === "left"){
+                        this.x += speed;
+                    }else{
+                        this.moveBackgrounds(-speed);
+                        this.moveEnemies(-speed);
+                    } 
+                }else if(this.x <= 350){
+                    if(this.direction == "right"){
+                        this.x += speed;
+                    }else{
+                        this.moveBackgrounds(-speed);
+                        this.moveEnemies(-speed);
+                    }
+                    
+                }else{
+                     this.x += speed;
+                }
         }
 
         if(this.isJumping && !this.isHurt && !this.isDead){
@@ -138,5 +155,19 @@ class Player extends Character{
             this.delayFrames = 40;
             this.calculateGameFrame();
         }
+    }
+
+    moveBackgrounds(speed){
+        this.world.backgrounds.forEach(backgroundArr => {
+            backgroundArr.forEach(background => {
+                background.moveBackground(speed);
+            });
+        });
+    }
+
+    moveEnemies(speed){
+        this.world.enemies.forEach(enemy =>{
+            enemy.x += speed;
+        });
     }
 }
