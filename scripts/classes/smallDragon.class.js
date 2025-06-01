@@ -4,7 +4,7 @@ class SmallDragon extends Enemie{
         this.height = 200;
         this.width = 200;
         this.img = new Image();
-        this.img.src = "../assets/img/enemies/smallDragon/completeSheet.png"
+        this.img.src = "./assets/img/enemies/smallDragon/completeSheet.png"
         this.spriteWidth = 128;
         this.spriteHeight = 128;
         this.spriteRow = 0;
@@ -61,9 +61,9 @@ class SmallDragon extends Enemie{
 
     checkDirection(){
         if(this.direction === "right"){
-            this.img.src = "../assets/img/enemies/smallDragon/completeSheet.png";
+            this.img.src = "./assets/img/enemies/smallDragon/completeSheet.png";
         }else{
-            this.img.src = "../assets/img/enemies/smallDragon/completeSheetReverse.png"
+            this.img.src = "./assets/img/enemies/smallDragon/completeSheetReverse.png"
         }
     }
 
@@ -79,7 +79,7 @@ class SmallDragon extends Enemie{
             this.spritePosition = (Math.floor(this.gameFrame/this.delayFrames) % 3);
             this.spriteColumn = this.spritePosition * this.spriteWidth;
             if(this.spritePosition === 2){
-                this.projectiles.push(new Projectile(this, "../assets/img/enemies/smallDragon/projectileSheet.png", 64, 64, 8))
+                this.projectiles.push(new Projectile(this, "./assets/img/enemies/smallDragon/projectileSheet.png", 64, 64, 8))
                 this.isAttacking = false;
             }
             this.gameFrame++;

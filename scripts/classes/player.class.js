@@ -16,10 +16,12 @@ class Player extends Character{
         this.projectiles = [];
 
         this.imgRight = new Image();
-        this.imgRight.src = "../assets/img/player/completeCharSheet.png";
+        this.imgRight.src = "./assets/img/player/completeCharSheet.png";
         this.imgLeft = new Image();
-        this.imgLeft.src = "../assets/img/player/completeCharSheetFlipped.png"
+        this.imgLeft.src = "./assets/img/player/completeCharSheetFlipped.png"
         this.img = this.imgRight;
+        this.lifebarImg = new Image();
+        this.lifebarImg.src = "./assets/img/player/lifebar.png"
 
         this.spriteWidth = 128;
         this.spriteHeight = 128;
@@ -47,20 +49,18 @@ class Player extends Character{
         if(this.direction === "right"){
             this.img = this.imgRight;
             this.checkAnimation(this.speed, this.velocity)
-
-
         }else{
             this.img = this.imgLeft;
             this.checkAnimation(-this.speed, this.velocity)
         }
         this.hitbox.update(this);
-        if(this.hp <= 0){
-            this.isDead = true;
-        }
+        this.checkLifebar();
+        this.checkHp();
     }
 
     draw(){
         ctx.drawImage(this.img, this.spriteColumn, this.spriteRow * this.spriteWidth, this.spriteWidth, this.spriteHeight, this.x, this.y, this.spriteWidth, this.spriteHeight);
+        ctx.drawImage(this.lifebarImg, this.lifebarPosition*256.7, 0, 140, 229.83, 100, 10, 150, 256.7, 140);
         this.hitbox.draw(this);
     }
 
@@ -137,7 +137,7 @@ class Player extends Character{
             this.calculateGameFrame();
             if(this.spritePosition === 3){
                 if(!this.cooldown){
-                    this.projectiles.push(new Projectile(this, "../assets/img/player/projectile/projSheet.png", 256, 256, 6))
+                    this.projectiles.push(new Projectile(this, "./assets/img/player/projectile/projSheet.png", 256, 256, 6))
                     this.cooldown = true;
                     this.isAttacking = false;
                 }
@@ -169,5 +169,35 @@ class Player extends Character{
         this.world.enemies.forEach(enemy =>{
             enemy.x += speed;
         });
+    }
+
+    checkLifebar(){
+        console.log(this.hp);
+        if(this.hp === 5){
+            this.lifebarPosition = 0;
+        }
+        if(this.hp === 4){
+            this.lifebarPosition = 1;
+        }
+        if(this.hp === 3){
+            this.lifebarPosition = 2;
+        }
+        if(this.hp === 2){
+            this.lifebarPosition = 3;
+        }
+        if(this.hp === 1){
+            this.lifebarPosition = 4;
+        }
+        if(this.hp === 0){
+            this.lifebarPosition = 5;
+        }
+    }
+
+    checkHp(){
+        if(this.hp === 0){
+            this.isDead = true;
+            this.gameFrame = 0;
+            this.calculateGameFrame();
+        }
     }
 }

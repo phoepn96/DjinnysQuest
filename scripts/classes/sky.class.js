@@ -1,7 +1,7 @@
 class Sky{
     constructor(world){
         this.img = new Image();
-        this.img.src = "../assets/img/backgrounds/parallax/layer07_Sky.png"
+        this.img.src = "./assets/img/backgrounds/parallax/layer07_Sky.png"
         this.x = 0;
         this.y = 0;
         this.width = world.width;
