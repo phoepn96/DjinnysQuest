@@ -5,6 +5,8 @@ class World{
         this.height = canvas.height;
         this.x = 0;
         this.y = 0;
+        this.stompCooldown = false;
+        this.stompColldownTime = 1;
         this.player = new Player(this, 500, 600);
         this.gravity = 0.5;
         this.sky = new Sky(this);
@@ -26,6 +28,7 @@ class World{
         this.checkGravity();        
         this.enemies.forEach(enemy => {
             enemy.update();
+            this.checkStomp(enemy);
             this.updateProjectiles(enemy)
         });
         this.updateProjectiles(this.player);
@@ -108,6 +111,33 @@ class World{
             cloud.update();
         })
     }
+
+    checkStomp(enemy) {
+    const player = this.player;
+    player.hitbox.update(player);
+    enemy.hitbox.update(enemy);
+    const p = player.hitbox;
+    const e = enemy.hitbox;
+    const playerBottom = p.y + p.height;
+    const enemyTop = e.y;
+    const isHorizontalOverlap = p.x < e.x + e.width && p.x + p.width > e.x;
+    const isVerticalOverlap = playerBottom >= enemyTop && p.y < e.y + e.height;
+    const isFalling = player.velocity >= 0;
+    if(this.stompCooldown === true) return;
+    if (isHorizontalOverlap && isVerticalOverlap && isFalling) {
+        enemy.hp -= 1;
+        enemy.isHurt = true;
+        enemy.gameFrame = 0;
+        this.gravity = 0.5;
+        player.y -= 10;
+        player.velocity = 10;
+        player.isJumping = true;
+        this.stompCooldown = true;
+        setTimeout( () => {
+            this.stompCooldown = false;
+        }, this.stompColldownTime * 1000)
+    }
+}
 
 
 }

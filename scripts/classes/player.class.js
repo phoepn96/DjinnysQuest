@@ -104,6 +104,7 @@ class Player extends Character{
                     }else{
                         this.moveBackgrounds(-speed);
                         this.moveEnemies(-speed);
+                        this.moveProjectiles(-speed)
                     } 
                 }else if(this.x <= 350){
                     if(this.direction == "right"){
@@ -111,6 +112,7 @@ class Player extends Character{
                     }else{
                         this.moveBackgrounds(-speed);
                         this.moveEnemies(-speed);
+                        this.moveProjectiles(-speed);
                     }
                     
                 }else{
@@ -170,6 +172,17 @@ class Player extends Character{
             enemy.x += speed;
         });
     }
+
+    moveProjectiles(speed) {
+    this.projectiles.forEach(proj => {
+        proj.x += speed;
+    });
+    this.world.enemies.forEach(enemy =>{
+        enemy.projectiles.forEach(proj =>{
+            proj.x += speed
+        });
+    });
+}
 
     checkLifebar(){
         console.log(this.hp);

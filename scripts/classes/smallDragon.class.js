@@ -116,20 +116,42 @@ class SmallDragon extends Enemie{
     }
 }
 
-    moveUp(){
-        if(this.isAttacking || this.isDead || this.isHurt) return
+   moveUp(){
+    if(this.isAttacking || this.isDead || this.isHurt) return;
+
+    const nextX = this.direction === "right" ? this.x + this.speed : this.x - this.speed;
+
+    const testHitbox = new Hitbox(this);
+    testHitbox.x = this.direction === "right"
+        ? this.hitbox_x_right + nextX
+        : this.hitbox_x_left + nextX;
+
+    // Prüfen, ob Kollision mit anderem Gegner entsteht
+    const collidingEnemy = this.world.enemies.find(enemy => {
+        return enemy !== this && this.isColliding(testHitbox, enemy.hitbox);
+    });
+
+    if (!collidingEnemy) {
+        this.isMoving = true;
         if(this.x + this.width < this.world.player.x){
-            this.isMoving = true;
             this.direction = "right";
             this.x += this.speed;
-        }else if(this.x > this.world.player.x + this.world.player.width){
-            this.isMoving = true;
+        } else if(this.x > this.world.player.x + this.world.player.width){
             this.direction = "left";
             this.x -= this.speed;
-        }else{
+        } else {
             this.isMoving = false;
         }
-   }
+    } else {
+        // Leicht voneinander wegdrücken, um das Verkleben zu lösen
+        if (this.x < collidingEnemy.x) {
+            this.x -= 1;
+        } else {
+            this.x += 1;
+        }
+        this.isMoving = false;
+    }
+}
 
    attack(){
     if(!this.cooldown && !this.isDead && !this.isHurt)
@@ -151,4 +173,13 @@ class SmallDragon extends Enemie{
         this.calculateGameFrame();
     }
    }
+
+   isColliding(hitboxA, hitboxB) {
+    return (
+        hitboxA.x < hitboxB.x + hitboxB.width &&
+        hitboxA.x + hitboxA.width > hitboxB.x &&
+        hitboxA.y < hitboxB.y + hitboxB.height &&
+        hitboxA.y + hitboxA.height > hitboxB.y
+    );
+}
 }
